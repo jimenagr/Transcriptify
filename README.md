@@ -69,6 +69,6 @@ pip install PyAudio
 ```
 
 ```bash
-git clone https://github.com/yourusername/file-to-text-chatgpt-summarizer.git
+git clone https://github.com/jimenagr/Transcriptify.git
 
 
