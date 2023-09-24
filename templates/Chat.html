@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_chat.css') }}">
+    <title>Transcriptify-Chat</title>
+</head>
+<body>
+    <div>
+        <a href="/" class="indexButtons">Back</a>
+    </div>
+    <div id="loading-overlay">
+        <div id="loading-modal">
+            <img src="/static/images/loading.gif" style="width: 10%; height: 50%;">
+            <!-- You can add a loading animation here if desired -->
+        </div>
+    </div>
+    <div id="summary-container" data-msg="{{ msg }}"></div>
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+    </div>
+    <div id="message-input-container">
+        <input type="text" id="message-input" placeholder="Ask a question..." onkeyup="sendMessage(event)">
+        <button id="message-button" onclick="sendMessage(event)">
+            <img src="/static/images/chat-icon.png" alt="Chat Icon" style="width: 30px; height: 30px;">
+        </button>
+    </div>
+    
+    <script>
+        const chatMessages = document.getElementById("chat-messages");
+        const messageInput = document.getElementById("message-input");
+        var sum, words, idea;
+        showLoadingModal()
+        
+        fetch("/send_dict")
+            .then(response => response.json())
+            .then(data => {
+                // Process and use the data as needed
+                var summary = data.summary;
+                var words = data.words;
+                var ideas = data.ideas;
+
+                hideLoadingModal();
+
+                if (summary != ""){
+                    addMessage("ChatGPT", "Summary: " + summary)
+                    addMessage("ChatGPT", "Repeated words: " + words)
+                    addMessage("ChatGPT", "Key idead: " + ideas)
+                }
+                else{
+                    addMessage("ChatGPT", "Hi!, what can I help you with?")
+                }
+                
+                summary = ""
+                words = ""
+                ideas = ""
+            })
+            .catch(error => {
+                console.error("Error:", error);
+        });
+
+        function sendMessage(event) {
+            if ((event.key === "Enter" || event.type === "click") && messageInput.value.trim() !== "") {
+                const message = messageInput.value;
+                addMessage("You", message);
+                
+                messageInput.value = "";
+
+                // Send the message to the Flask backend
+                sendMessageToFlask(message);
+            }
+        }
+
+        function sendMessageToFlask(message) {
+            var userInput = document.getElementById("message-input").value;
+
+            fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ "message": message})
+
+                
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the Flask backend, if needed
+                console.log(data);
+                // Add the chatbot's response to the chat interface
+                var response = data.response;
+                addMessage("ChatGPT", response);
+            });
+        }
+
+        function addMessage(sender, text) {
+            const messageElement = document.createElement("div");
+            messageElement.className = "message";
+            messageElement.innerHTML = `<strong>${sender}:</strong> ${text}`;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showLoadingModal() {
+                document.getElementById("loading-overlay").style.display = "block";
+            }
+
+        function hideLoadingModal() {
+            document.getElementById("loading-overlay").style.display = "none";
+        }
+
+    </script>
+</body>
+</html>

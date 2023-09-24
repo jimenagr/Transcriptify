@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <title>Transcriptify-Home</title>
+    </head>
+    <body>
+        <div id="loading-overlay">
+            <div id="loading-modal">
+                <img src="/static/images/loading.gif" style="width: 10%; height: 50%;">
+                <!-- You can add a loading animation here if desired -->
+            </div>
+        </div>
+        <br><br><br><br>
+        <form method="post" enctype="multipart/form-data">
+            <div class="fade-in-text">
+                <h1 class="title">Transcriptify</h1>
+                <p class="text">An all-in-one solution for converting diverse media formats, including audio, video, and images
+                into easily digestible and accessible text-based content. You can upload a file or chat directly with an AI.</p>
+                <br><br>
+            </div>
+            <div class="buttons">
+                <div class="button-container">
+                    <button type="submit" class="indexButtons" onclick="detectarTipoDeArchivo()">Upload file</button>
+                    <a href="chat" class="indexButtons">ChatBot</a>
+                </div>
+            </div>
+            <br>
+            <div class="indent">
+                <input type="file" id="archivoInput" accept=".jpg, .png, .mp3, .pdf, .docx, .txt, .mp4" required name="file"> 
+            </div>
+        </form>
+
+
+        <script>
+            function detectarTipoDeArchivo() {
+                const archivoInput = document.getElementById("archivoInput");
+    
+                const archivo = archivoInput.files[0];
+    
+                if (archivo) {
+                    showLoadingModal();
+                } else {
+                    alert("Archivo NO aceptado");
+                }
+            }
+            function showLoadingModal() {
+                document.getElementById("loading-overlay").style.display = "block";
+            }
+
+            function hideLoadingModal() {
+                document.getElementById("loading-overlay").style.display = "none";
+            }
+
+        </script>    
+    </body>
+</html>

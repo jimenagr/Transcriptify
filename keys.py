@@ -1,0 +1,7 @@
+OPENAI_API_KEY = "6b25369971534252bbcee5e488ce59f1" 
+OPENAI_API_BASE = "https://openaistkinno.openai.azure.com/" 
+OPENAI_EMBEDDINGS_MODEL_NAME = "OpenAIEmbeddings" 
+OPENAI_CHAT_MODEL_NAME = "InnovationGPT2" 
+PINECONE_API_KEY = "2c573a13-0643-493b-b8e1-e319d2def8b8"
+PINECONE_ENVIRONMENT = "gcp-starter" 
+PINECONE_INDEX_NAME = "hackpy"
